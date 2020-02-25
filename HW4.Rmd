@@ -1,0 +1,51 @@
+---
+title: "HW4"
+author: "Corinna Hong"
+date: "February 24, 2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      message = FALSE,
+                      warning = FALSE)
+```
+
+```{r}
+
+# load packages
+
+library(tidyverse)
+library(janitor)
+
+```
+
+```{r}
+
+# read in and wrangle climate change data
+
+climate_change <- read_csv("climate_change.csv") %>% 
+  clean_names() %>% 
+  mutate(geographic_range = str_to_lower(geographic_range))
+
+```
+
+```{r}
+
+# Visualize changes in density due to development mode
+
+climate_dev_bar <- ggplot(climate_change,
+                          aes(x = species, y = change_in_density)) +
+  geom_bar(stat = "identity") + # identity means height of bars equals actual value
+  facet_wrap(~development_mode)
+
+climate_dev_bar
+
+climate_dev_bar2 <- ggplot(climate_change,
+                          aes(x = species, y = change_in_density, fill = development_mode)) +
+  geom_bar(position = "dodge", stat = "identity") # identity means height of bars equals actual value
+
+climate_dev_bar2
+
+```
+
