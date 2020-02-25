@@ -30,22 +30,45 @@ climate_change <- read_csv("climate_change.csv") %>%
 
 ```
 
-```{r}
+```{r, visualizing patterns of change for climate change data}
 
 # Visualize changes in density due to development mode
 
 climate_dev_bar <- ggplot(climate_change,
-                          aes(x = species, y = change_in_density)) +
-  geom_bar(stat = "identity") + # identity means height of bars equals actual value
-  facet_wrap(~development_mode)
+                          aes(x = species,
+                              y = change_in_density,
+                              fill = development_mode)) +
+  geom_bar (stat = "identity") + # identity means height of bars equals actual value
+  theme_minimal()
 
 climate_dev_bar
 
-climate_dev_bar2 <- ggplot(climate_change,
-                          aes(x = species, y = change_in_density, fill = development_mode)) +
-  geom_bar(position = "dodge", stat = "identity") # identity means height of bars equals actual value
 
-climate_dev_bar2
+
+# Visualize changes in density due to geographic range
+
+climate_geo_bar <- ggplot(climate_change,
+                          aes(x = species,
+                              y = change_in_density,
+                              fill = geographic_range)) +
+  geom_bar(stat = "identity") +
+  theme_minimal()
+
+climate_geo_bar # PATTERN: Southern spcies increase, Northern species decreased. Cosmo did both
+
+
+
+# Visualize changes in density due to trophic level
+
+climate_tro_bar <- ggplot(climate_change,
+                          aes(x = species,
+                              y = change_in_density,
+                              fill = trophic_level)) +
+  geom_bar(stat = "identity") +
+  theme_minimal()
+
+climate_tro_bar
+
 
 ```
 
