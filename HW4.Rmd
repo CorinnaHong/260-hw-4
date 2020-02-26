@@ -8,7 +8,8 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE,
                       message = FALSE,
-                      warning = FALSE)
+                      warning = FALSE,
+                      fig.align = "center")
 ```
 
 ```{r}
@@ -54,7 +55,7 @@ climate_geo_bar <- ggplot(climate_change,
   geom_bar(stat = "identity") +
   theme_minimal()
 
-climate_geo_bar # PATTERN: Southern spcies increase, Northern species decreased. Cosmo did both
+climate_geo_bar # PATTERN: Southern species increase, Northern species decreased.
 
 
 
@@ -68,6 +69,36 @@ climate_tro_bar <- ggplot(climate_change,
   theme_minimal()
 
 climate_tro_bar
+
+
+```
+
+```{r}
+
+# Read in and wrangle data for nuclear power plant
+
+nuclear_power <- read_csv("nuclear_power.csv") %>% 
+  clean_names() %>% 
+  gather(`hyperion_bay`,`noway_bay`,`diablo_cove`, key = "site", value = "density") # Density measured in (# of individuals/100m2)
+
+```
+
+```{r, visualizing patterns of change for nuclear power}
+
+# Visualize change in all species across all sites
+
+nuclear_species <- ggplot(nuclear_power, aes(x = year, y = density, fill = site)) +
+  geom_line(aes(color = site)) +
+  facet_wrap(~species, scale = "free", nrow = 3) +
+  theme_minimal()
+
+nuclear_species
+
+```
+
+```{r}
+
+# Read in data for crab fishery
 
 
 ```
