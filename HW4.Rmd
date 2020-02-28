@@ -18,6 +18,7 @@ knitr::opts_chunk$set(echo = TRUE,
 
 library(tidyverse)
 library(janitor)
+library(paletteer)
 
 ```
 
@@ -40,6 +41,7 @@ climate_dev_bar <- ggplot(climate_change,
                               y = change_in_density,
                               fill = development_mode)) +
   geom_bar (stat = "identity") + # identity means height of bars equals actual value
+   scale_fill_paletteer_d("ghibli::MononokeMedium", direction = -1) + # direction -1 means start from the right side of the palette
   theme_minimal()
 
 climate_dev_bar
@@ -53,6 +55,7 @@ climate_geo_bar <- ggplot(climate_change,
                               y = change_in_density,
                               fill = geographic_range)) +
   geom_bar(stat = "identity") +
+  scale_fill_paletteer_d("ghibli::MononokeMedium", direction = -1) +
   theme_minimal()
 
 climate_geo_bar # PATTERN: Southern species increase, Northern species decreased.
@@ -66,6 +69,7 @@ climate_tro_bar <- ggplot(climate_change,
                               y = change_in_density,
                               fill = trophic_level)) +
   geom_bar(stat = "identity") +
+  scale_fill_paletteer_d("ghibli::MononokeMedium", direction = -1) +
   theme_minimal()
 
 climate_tro_bar
@@ -89,6 +93,7 @@ nuclear_power <- read_csv("nuclear_power.csv") %>%
 
 nuclear_species <- ggplot(nuclear_power, aes(x = year, y = density, fill = site)) +
   geom_line(aes(color = site)) +
+  scale_color_paletteer_d("ghibli::MononokeMedium", direction = -1) +
   facet_wrap(~species, scale = "free", nrow = 3) +
   theme_minimal()
 
@@ -98,8 +103,85 @@ nuclear_species
 
 ```{r}
 
-# Read in data for crab fishery
+# Read in and wrangle data for crab fishery
 
+crab_barnacle <- read_csv("crab_barnacle.csv") %>% 
+  clean_names() %>% 
+  gather(`cancer_ca`,`cancer_or`,`barnacle_ca`,`barnacle_or`, key = "site", value = "density") %>% 
+  spread(stage, density) %>% 
+  rename(adult_density = Adult) %>% # rename column
+  rename(recruit_density = Recruit) %>% 
+  separate(site, into = c("species", "site"), sep = "_") %>%  # separate species from site
+  arrange(year, species)
+
+```
+
+```{r}
+
+# Read in and wrangle data for upwelling indices
+
+upwelling <- read_csv("upwelling.csv") %>% 
+  clean_names() %>% 
+  gather(`winter_ca`,`summer_ca`,`winter_or`,`summer_or`, key = "season", value = "upwelling_indices") %>% # gather seasons & put values in a separate col
+  separate(season, into = c("season","site"), sep = "_") %>% 
+  arrange(year)
+
+```
+
+```{r}
+
+# Join crab_barnacle to upwelling
+
+crab_fishery <- left_join(crab_barnacle, upwelling) %>% # join two dataframes, default wwill join by matching columns in this case, "year" and "site"
+  clean_names() %>% 
+  arrange(year)
+
+crab_fishery$year <- as.character(crab_fishery$year) 
+
+```
+
+```{r, visualizing patterns of change for fishery}
+
+# Relationship betewwen density of adult and next year's recruits for barnacles
+
+adult_barnacles <- crab_fishery %>% 
+  filter(species == "barnacle")
+
+adult_barnacles_plot <- ggplot(adult_barnacles, aes(x = adult_density, y = recruit_density)) +
+  geom_point(aes(color = year)) +
+  scale_color_paletteer_d("trekcolors::lcars_cardassian") +
+  facet_wrap(~site, scale = "free") +
+  theme_minimal()
+
+adult_barnacles_plot
+
+
+
+
+# Relationship between density of adult and next year's recruits in crabs
+
+adult_crabs <- crab_fishery %>% 
+  filter(species == "cancer")
+
+adult_crabs_plot <- ggplot(adult_crabs, aes(x = adult_density, y = recruit_density)) +
+  geom_point(aes(color = year)) +
+  scale_color_paletteer_d("trekcolors::lcars_cardassian") +
+  facet_wrap(~site, scale = "free") +
+  theme_minimal()
+
+adult_crabs_plot
+
+
+
+# Relationship between desnsity of recruits and upwelling indicies for barnacles
+
+barnacle_up_adult_plot <- ggplot(adult_barnacles, aes(x = upwelling_indices, y = recruit_density, fill = season)) +
+  geom_point(aes(color = season)) +
+  scale_color_paletteer_d("calecopal::superbloom2") +
+  facet_wrap(~site, scale = "free")
+
+barnacle_up_adult_plot
+  
 
 ```
 
