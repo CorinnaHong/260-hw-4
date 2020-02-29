@@ -6,7 +6,7 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE,
+knitr::opts_chunk$set(echo = FALSE,
                       message = FALSE,
                       warning = FALSE,
                       fig.align = "center")
@@ -57,6 +57,7 @@ climate_geo_bar <- ggplot(climate_change,
                               fill = geographic_range)) +
   geom_bar(stat = "identity") +
   scale_fill_paletteer_d("ghibli::MononokeMedium", direction = -1) +
+  labs(x = "Species", y = "Change in Density", title = "Change in Species Density from 1955-2020", fill = "Geographic Range") + # fill changes legend title
   theme_minimal()
 
 climate_geo_bar # PATTERN: Southern species increase, Northern species decreased.
@@ -75,8 +76,10 @@ climate_tro_bar <- ggplot(climate_change,
 
 climate_tro_bar
 
-
 ```
+
+Species whose range exists south of a Northern California coastal site have increased over the past 65 years. On the other hand, species whose range is north of the study site have decreased. This pattern suggests that climatic changes have impacted marine communities in California. As climate change leads to global increases in sea surface temperature, species who are adapted to cooler water temperatures (those who have northern ranges) are experiencing decreases in density. The opposite happens to species who have southern ranges and are already adapted to warmer water temperatures. 
+
 
 ## 2. Visualizing changes at nuclear power plant
 ```{r}
