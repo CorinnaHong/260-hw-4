@@ -22,6 +22,7 @@ library(paletteer)
 
 ```
 
+##1. Visualizing patterns of change for climate change data
 ```{r}
 
 # read in and wrangle climate change data
@@ -32,7 +33,7 @@ climate_change <- read_csv("climate_change.csv") %>%
 
 ```
 
-```{r, visualizing patterns of change for climate change data}
+```{r}
 
 # Visualize changes in density due to development mode
 
@@ -77,6 +78,7 @@ climate_tro_bar
 
 ```
 
+## 2. Visualizing changes at nuclear power plant
 ```{r}
 
 # Read in and wrangle data for nuclear power plant
@@ -87,7 +89,7 @@ nuclear_power <- read_csv("nuclear_power.csv") %>%
 
 ```
 
-```{r, visualizing patterns of change for nuclear power}
+```{r}
 
 # Visualize change in all species across all sites
 
@@ -136,11 +138,12 @@ crab_fishery <- left_join(crab_barnacle, upwelling) %>% # join two dataframes, d
   clean_names() %>% 
   arrange(year)
 
-crab_fishery$year <- as.character(crab_fishery$year) 
+# crab_fishery$year <- as.character(crab_fishery$year) 
 
 ```
 
-```{r, visualizing patterns of change for fishery}
+## 3. Visualizing patterns of change for crab fishery
+```{r}
 
 # Relationship betewwen density of adult and next year's recruits for barnacles
 
@@ -149,9 +152,9 @@ adult_barnacles <- crab_fishery %>%
 
 adult_barnacles_plot <- ggplot(adult_barnacles, aes(x = adult_density, y = recruit_density)) +
   geom_point(aes(color = year)) +
-  scale_color_paletteer_d("trekcolors::lcars_cardassian") +
+  scale_color_paletteer_c("gameofthrones::lannister", direction = -1) +
   facet_wrap(~site, scale = "free") +
-  theme_minimal()
+  theme_classic()
 
 adult_barnacles_plot
 
@@ -165,23 +168,63 @@ adult_crabs <- crab_fishery %>%
 
 adult_crabs_plot <- ggplot(adult_crabs, aes(x = adult_density, y = recruit_density)) +
   geom_point(aes(color = year)) +
-  scale_color_paletteer_d("trekcolors::lcars_cardassian") +
+  scale_color_paletteer_c("gameofthrones::lannister", direction = -1) +
   facet_wrap(~site, scale = "free") +
-  theme_minimal()
+  theme_classic()
 
 adult_crabs_plot
 
 
+```
+
+```{r}
 
 # Relationship between desnsity of recruits and upwelling indicies for barnacles
 
-barnacle_up_adult_plot <- ggplot(adult_barnacles, aes(x = upwelling_indices, y = recruit_density, fill = season)) +
-  geom_point(aes(color = season)) +
-  scale_color_paletteer_d("calecopal::superbloom2") +
-  facet_wrap(~site, scale = "free")
+barnacle_up_recruit_plot <- ggplot(adult_barnacles, aes(x = upwelling_indices, y = recruit_density)) +
+  geom_point(aes(color = year)) +
+  scale_color_paletteer_c("gameofthrones::lannister", direction = -1) +
+  facet_grid(site ~ season, scale = "free") +
+  theme_bw()
+
+barnacle_up_recruit_plot
+
+
+
+# Relationship between density of adults and upwelling indicies for barnacles
+
+
+barnacle_up_adult_plot <- ggplot(adult_barnacles, aes(x = upwelling_indices, y = adult_density)) +
+  geom_point(aes(color = year)) +
+  scale_color_paletteer_c("gameofthrones::lannister", direction = -1) +
+  facet_grid(site ~ season, scale = "free") +
+  theme_bw()
 
 barnacle_up_adult_plot
-  
+
+
+
+# Relationship between density of recruits and upwelling indicies for crabs
+
+crab_up_recruit_plot <- ggplot(adult_crabs, aes(x = upwelling_indices, y = recruit_density)) +
+  geom_point(aes(color = year)) +
+  scale_color_paletteer_c("gameofthrones::lannister", direction = -1) +
+  facet_grid(site ~ season, scale = "free") +
+  theme_bw()
+
+crab_up_recruit_plot
+
+
+
+# Relationship between density of adults and upwelling indicies for crabs
+
+crab_up_adult_plot <- ggplot(adult_crabs, aes(x = upwelling_indices, y = adult_density)) +
+  geom_point(aes(color = year)) +
+  scale_color_paletteer_c("gameofthrones::lannister", direction = -1) +
+  facet_grid(site ~ season, scale = "free") +
+  theme_bw()
+
+crab_up_adult_plot
 
 ```
 
