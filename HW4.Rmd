@@ -151,12 +151,28 @@ crab_fishery <- left_join(crab_barnacle, upwelling) %>% # join two dataframes, d
 ```
 
 ## 3. Visualizing patterns of change for crab fishery
+
 ```{r}
 
-# Relationship betewwen density of adult and next year's recruits for barnacles
+# Subset of data for barnacles
 
 barnacles <- crab_fishery %>% 
   filter(species == "barnacle")
+
+
+# Subest of data for crabs
+
+crabs <- crab_fishery %>% 
+  filter(species == "cancer")
+
+```
+
+```{r, eval = FALSE}
+
+# These comparisons were done in Excel instead. I could not figure out how to graph is such that values were offset by one year. (adult densities in one year affected recruit densities in the next year)
+
+
+# Relationship betewwen density of adult and next year's recruits for barnacles
 
 barnacles_plot <- ggplot(barnacles, aes(x = adult_density, y = recruit_density)) +
   geom_point(aes(color = year)) +
@@ -171,9 +187,6 @@ barnacles_plot
 
 # Relationship between density of adult and next year's recruits in crabs
 
-crabs <- crab_fishery %>% 
-  filter(species == "cancer")
-
 crabs_plot <- ggplot(crabs, aes(x = adult_density, y = recruit_density)) +
   geom_point(aes(color = year)) +
   scale_color_paletteer_c("gameofthrones::lannister", direction = -1) +
@@ -184,22 +197,19 @@ crabs_plot
 
 
 ```
- 
- Slight relationship between recruit and adult densities in CA for barnacles.
-
 
 ```{r}
 
-# Relationship between desnsity of recruits and upwelling indicies for barnacles
+# Relationship between desnsity of recruits and winter upwelling indicies for barnacles
 
 recruit_barnacles_upwelling <- barnacles %>% 
-  filter(season == "summer")
+  filter(season == "winter")
 
 barnacle_up_recruit_plot <- ggplot(recruit_barnacles_upwelling, aes(x = upwelling_indices, y = recruit_density)) +
   geom_point(aes(color = year)) +
   scale_color_paletteer_c("gameofthrones::lannister", direction = -1) +
   facet_wrap(~site, scale = "free", nrow = 2) +
-  labs(x = "Upwelling Index", y = "Recruit Density", title = "Recruit Density vs. Summer Upwelling Index for Barnacles", color = "Year") +
+  labs(x = "Upwelling Index", y = "Recruit Density", title = "Recruit Density vs. Winter Upwelling Index for Barnacles", color = "Year") +
   theme_bw()
 
 barnacle_up_recruit_plot
@@ -209,13 +219,13 @@ barnacle_up_recruit_plot
 # Relationship between density of adults and upwelling indicies for barnacles
 
 adult_barnacles_upwelling <- barnacles %>% 
-  filter(season == "winter")
+  filter(season == "summer")
 
 barnacle_up_adult_plot <- ggplot(adult_barnacles_upwelling, aes(x = upwelling_indices, y = adult_density)) +
   geom_point(aes(color = year)) +
   scale_color_paletteer_c("gameofthrones::lannister", direction = -1) +
   facet_wrap(~site, scale = "free", nrow = 2) +
-  labs(x = "Upwelling Index", y = "Adult Density", title = "Adult Density vs. Winter Upwelling Index for Barnacles", color = "Year") +
+  labs(x = "Upwelling Index", y = "Adult Density", title = "Adult Density vs. Summer Upwelling Index for Barnacles", color = "Year") +
   theme_bw()
 
 barnacle_up_adult_plot
@@ -225,12 +235,12 @@ barnacle_up_adult_plot
 # Relationship between density of recruits and upwelling indicies for crabs
 
 recruit_crabs_upwelling <- crabs %>%
-  filter(season == "summer")
+  filter(season == "winter")
 
 crab_up_recruit_plot <- ggplot(recruit_crabs_upwelling, aes(x = upwelling_indices, y = recruit_density)) +
   geom_point(aes(color = year)) +
   scale_color_paletteer_c("gameofthrones::lannister", direction = -1) +
-  facet_wrap(~site, scale = "free") +
+  facet_wrap(~site, scale = "free", nrow = 2) +
   theme_bw()
 
 crab_up_recruit_plot
@@ -240,20 +250,24 @@ crab_up_recruit_plot
 # Relationship between density of adults and upwelling indicies for crabs
 
 adult_crabs_upwelling <- crabs %>% 
-  filter(season == "winter")
+  filter(season == "summer")
 
 crab_up_adult_plot <- ggplot(adult_crabs_upwelling, aes(x = upwelling_indices, y = adult_density)) +
   geom_point(aes(color = year)) +
   scale_color_paletteer_c("gameofthrones::lannister", direction = -1) +
   facet_wrap(~site, scale = "free", nrow = 2) +
-  labs(x = "Upwelling Index", y ="Adult Density", title ="Adult Density vs. Winter Upwelling Index for Crabs", color = "Year") +
+  labs(x = "Upwelling Index", y ="Adult Density", title ="Adult Density vs. Summer Upwelling Index for Crabs", color = "Year") +
   theme_bw()
 
 crab_up_adult_plot
 
 ```
+Winter upwelling indicies affect recruit densities, because this is when adults are producing new eggs. On the other hand, summer upwelling indicies affect adult densities, because this is when juveniles are developing. 
 
-Slight relationship between recruit density and summer upwelling index for barnacles in cA
-Slight relationship between adult density and winter upwelling index for barnacles in cA
-Slight relationship between adult density and winter upwelling index for crabs in CA ?
-Slight relaiontship between adult density and winter upwelling index for crabs in OR?
+
+There is a strong positive relationship between recruit density and the winter upwelling index for barnacles in cA. Downwelling (negative values) decreases recruit density and upwelling (positive values) increases recruit density. This makes sense because downwelling is associated with low nutrients and rare phytoplankton. This, of course, would affect the adult population and therefore cause them to produce fewer eggs. 
+
+
+There is a slight relationship between adult density and the summer upwelling index for barnacles in CA. Data shows a pretty high recruitment density regardless of upwelling index.
+
+Slight relationship between adult density and summer upwelling index for crabs in CA and OR
