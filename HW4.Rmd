@@ -2,7 +2,9 @@
 title: "HW4"
 author: "Corinna Hong"
 date: "February 24, 2020"
-output: html_document
+output:
+  word_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -78,7 +80,7 @@ climate_tro_bar
 
 ```
 
-Species whose range exists south of a Northern California coastal site have increased over the past 65 years. On the other hand, species whose range is north of the study site have decreased. This pattern suggests that climatic changes have impacted marine communities in California. As climate change leads to global increases in sea surface temperature, species who are adapted to cooler water temperatures (those who have northern ranges) are experiencing decreases in density. The opposite happens to species who have southern ranges and are already adapted to warmer water temperatures. 
+Species whose range exists south of a Northern California coastal site have increased over the past 65 years. On the other hand, species whose range is north of the study site have decreased. This pattern suggests that climatic changes have impacted marine communities in California. As climate change leads to global increases in sea surface temperature, species who are adapted to cooler water temperatures (those who have northern ranges) are experiencing decreases in density. The opposite happens to species who have southern ranges and are already adapted to warmer water temperatures.
 
 
 ## 2. Visualizing changes at nuclear power plant
@@ -107,9 +109,10 @@ nuclear_species <- ggplot(nuclear_power, aes(x = year, y = density, fill = site)
 nuclear_species
 
 ```
-El Diablo nuclear power plant seemd to slightly alter the density of species C in Diablo Bay. Shortly after the plant became operations, species C densities increased in Diablo Bay compared to Hyperion Bay. Hyperion Bay is used as a control in this analysis because it is the site most silimar to Diablo Bay before the plant became operational. In 2015, species C densities increased again in Hyperion Bay, and now the two Bays show similar patterns of density changes. 
+El Diablo nuclear power plant seemd to slightly alter the density of species C in Diablo Bay. Shortly after the plant became operations, species C densities increased in Diablo Bay compared to Hyperion Bay. Hyperion Bay is used as a control in this analysis because it is the site most silimar to Diablo Bay before the plant became operational. In 2015, species C densities increased again in Hyperion Bay, and now the two Bays show similar patterns of density changes.
 
 
+## 3. Visualizing patterns of change for crab fishery
 ```{r}
 
 # Read in and wrangle data for crab fishery
@@ -149,8 +152,6 @@ crab_fishery <- left_join(crab_barnacle, upwelling) %>% # join two dataframes, d
 # crab_fishery$year <- as.character(crab_fishery$year) 
 
 ```
-
-## 3. Visualizing patterns of change for crab fishery
 
 ```{r}
 
@@ -262,12 +263,71 @@ crab_up_adult_plot <- ggplot(adult_crabs_upwelling, aes(x = upwelling_indices, y
 crab_up_adult_plot
 
 ```
-Winter upwelling indicies affect recruit densities, because this is when adults are producing new eggs. On the other hand, summer upwelling indicies affect adult densities, because this is when juveniles are developing. 
+Winter upwelling indices affect recruit densities, because this is when adults are producing new eggs. On the other hand, summer upwelling indices affect adult densities, because this is when juveniles are developing.
+
+There is a strong positive relationship between recruit density and the winter upwelling index for barnacles in California. Downwelling (negative values) decreases recruit density and upwelling (positive values) increases recruit density. This makes sense because downwelling is associated with low nutrients and rare phytoplankton. This, of course, would affect the adult population and therefore cause them to produce fewer eggs.
 
 
-There is a strong positive relationship between recruit density and the winter upwelling index for barnacles in cA. Downwelling (negative values) decreases recruit density and upwelling (positive values) increases recruit density. This makes sense because downwelling is associated with low nutrients and rare phytoplankton. This, of course, would affect the adult population and therefore cause them to produce fewer eggs. 
 
 
-There is a slight relationship between adult density and the summer upwelling index for barnacles in CA. Data shows a pretty high recruitment density regardless of upwelling index.
 
-Slight relationship between adult density and summer upwelling index for crabs in CA and OR
+
+
+
+
+## 4. EXTRA
+
+```{r}
+
+
+# Grid plots to double check
+
+barnacle_up_recruit_plot <- ggplot(barnacles, aes(x = upwelling_indices, y = recruit_density)) +
+  geom_point(aes(color = year)) +
+  scale_color_paletteer_c("gameofthrones::lannister", direction = -1) +
+  facet_grid(season~site, scale = "free") +
+  labs(x = "Upwelling Index", y = "Recruit Density", title = "Recruit Density vs. Upwelling Index for Barnacles", color = "Year") +
+  theme_bw()
+
+barnacle_up_recruit_plot
+
+
+
+
+barnacle_up_adultt_plot <- ggplot(barnacles, aes(x = upwelling_indices, y = adult_density)) +
+  geom_point(aes(color = year)) +
+  scale_color_paletteer_c("gameofthrones::lannister", direction = -1) +
+  facet_grid(season~site, scale = "free") +
+  labs(x = "Upwelling Index", y = "Adult Density", title = "Adult Density vs. Upwelling Index for Barnacles", color = "Year") +
+  theme_bw()
+
+barnacle_up_adultt_plot
+
+
+
+
+
+
+crab_up_recruit_plot <- ggplot(crabs, aes(x = upwelling_indices, y = recruit_density)) +
+  geom_point(aes(color = year)) +
+  scale_color_paletteer_c("gameofthrones::lannister", direction = -1) +
+  facet_grid(season~site, scale = "free") +
+  theme_bw()
+
+crab_up_recruit_plot
+
+
+
+crab_up_adultt_plot <- ggplot(crabs, aes(x = upwelling_indices, y = adult_density)) +
+  geom_point(aes(color = year)) +
+  scale_color_paletteer_c("gameofthrones::lannister", direction = -1) +
+  facet_grid(season~site, scale = "free") +
+  theme_bw()
+
+crab_up_adultt_plot
+
+
+
+
+```
+
