@@ -252,8 +252,6 @@ crab_up_adult_plot
 
 ```
 
-
-
 ```{r}
 
 # Final plot that shows relationships for assignment
@@ -275,3 +273,40 @@ barnacle_up_recruit_plot
 
 ```
 Winter upwelling indices affect recruit densities, because female adults are producing new eggs in this season. In spring they spawn, resulting in that year’s recruit density. In the summer, the juveniles are developing and feeding. Summer upwelling indices will affect food availability and therefore the resulting adult density for that year. The data show a strong positive relationship between recruit density and the winter upwelling index for barnacles in California. Downwelling (negative values) decreases recruit density and upwelling (positive values) increases recruit density. This makes sense because downwelling is associated with low nutrients and rare phytoplankton. This, of course, would negatively affect the adult population and therefore cause them to produce fewer eggs.
+
+
+
+### Figures for HW 5 Management Plan
+
+```{r}
+
+crabs_recruit_winter <- crabs %>% 
+  filter(season == "winter")
+
+
+crab_adult_summer <- crabs %>% 
+  filter(season == "summer")
+
+
+crab_recruit_plot <- ggplot(crabs_recruit_winter, aes(x = upwelling_indices, y = recruit_density)) +
+  geom_point(aes(color = year)) +
+  scale_color_paletteer_c("gameofthrones::lannister", direction = -1) +
+  facet_wrap(~site) +
+  labs(x = "Winter Upwelling Index", y = "Recruit Density", title = "Recruit Density vs. Upwelling Index for Crabs", color = "Year") +
+  theme_bw()
+
+crab_recruit_plot
+
+
+
+crab_adult_plot <- ggplot(crab_adult_summer, aes(x = upwelling_indices, y = adult_density)) +
+  geom_point(aes(color = year)) +
+  scale_color_paletteer_c("gameofthrones::lannister", direction = -1) +
+  facet_wrap(~site) +
+  labs(x = "Summer Upwelling Index", y = "Adult Density", title = "Adult Density vs. Upwelling Index for Crabs", color = "Year") +
+  theme_bw()
+
+crab_adult_plot
+
+```
+
